@@ -7,7 +7,10 @@ mongoose.connect('mongodb://127.0.0.1/book_db')
 
 const bookSchema = new mongoose.Schema({
     title: String,
-    author: String,
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Author'
+    },
     publisher: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Publisher'

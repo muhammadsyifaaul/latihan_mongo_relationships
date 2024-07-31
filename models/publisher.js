@@ -11,8 +11,9 @@ const publisherSchema = new mongoose.Schema({
         city: String
     },
     contact: Number,
-    typeBook: [{
-        type: String
+    books: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book'
     }]
 })
 
