@@ -4,18 +4,19 @@ mongoose.connect('mongodb://127.0.0.1/book_db')
 .then(res => console.log('connected to mongodb'))
 .catch(err => console.log(err))
 
-const publisherSchema = new mongoose.Schema({
+const authorSchema = new mongoose.Schema({
     name: String,
     address: {
         street: String,
         city: String
     },
     contact: Number,
-    typeBook: [{
-        type: String
+    books: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book'
     }]
 })
 
-const Publisher = mongoose.model('Publisher',publisherSchema)
+const Author = mongoose.model('Author',authorSchema)
 
-module.exports = Publisher
+module.exports = Author
