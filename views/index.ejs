@@ -1,9 +1,14 @@
 <a href="/addBook" class="btn btn-success badge">Add Book</a>
 
+
+<% if (getAllBook.length === 0) { %>
+    <h1>No Data To Display</h1>
+<% } %>
+
 <ul class="mt-4">
     <% getAllBook.forEach(book => { %>
         <li ><%- book.title %></li>
-        <a href="" class="btn btn-primary badge">Details</a>
+        <a href="/details/<%= book._id %>" class="btn btn-primary badge">Details</a>
         <a href="" class="btn btn-danger badge">Edit</a>
     <% }) %>
 </ul>

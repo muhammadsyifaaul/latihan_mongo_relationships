@@ -26,6 +26,17 @@ router.get('/addBook', (req,res) => {
         layout: 'layouts/main-layout'
     })
 })
+router.get('/details/:id', async (req,res) => {
+    const {id} = req.params
+    const book = await Book.findById(id)
+    .populate('author','name')
+    .populate('publisher','name')
+    res.render('show',{
+        title: 'Details',
+        layout: 'layouts/main-layout',
+        book
+    })
+})
 
 router.use(crudRouter)
 

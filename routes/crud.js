@@ -16,13 +16,20 @@ router.post('/addBook', async (req,res) => {
     })
     const book = new Book({
         title,
-        author: author._id,
-        publisher: publisher._id
+        author: authorBook._id,
+        publisher: publisherBook._id
     })
 
-    Promise.all([authorBook.save(),publisherBook.save(),book.save()])
-    .then(res => console.log('data succesfully added'))
+   await Promise.all([authorBook.save(),publisherBook.save(),book.save()])
+
+
+    authorBook.books.push(book._id)
+    publisherBook.books.push(book._id)
+
+    await Promise.all([authorBook.save(),publisherBook.save()])
+    .then(res => console.log('data successfully added'))
     .catch(err => console.log(err))
+
     
     res.redirect('/home')
     
