@@ -1,6 +1,8 @@
 const express = require('express')
+const app = express()
 const router = express.Router()
 const Book = require('../models/book')
+const crudRouter = require('./crud')
 
 
 
@@ -18,6 +20,15 @@ router.get('/home',  async (req,res) => {
         getAllBook
     })
 })
+router.get('/addBook', (req,res) => {
+    res.render('addBook',{
+        title: 'Add Book',
+        layout: 'layouts/main-layout'
+    })
+})
+
+router.use(crudRouter)
+
 
 
 
