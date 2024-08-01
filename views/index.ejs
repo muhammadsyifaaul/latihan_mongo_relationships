@@ -1,1 +1,5 @@
-<h1>Hey</h1>
+<ul class="list-group">
+    <% getAllBook.forEach(book => { %>
+        <li class="list-group-item"><%- book.title %></li>
+    <% }) %>
+  </ul>
