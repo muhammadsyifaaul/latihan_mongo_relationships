@@ -38,6 +38,25 @@ router.get('/details/:id', async (req,res) => {
     })
 })
 
+router.get('/edit/:id', async (req,res) => {
+    const {id} = req.params
+    const book = await Book.findById(id)
+    .populate('author','name')
+    .populate('publisher','name')
+    const bookData = {
+        _id: book._id,
+        title: book.title,
+        author: book.author.name,
+        publisher: book.publisher.name,
+    };
+    res.render('edit',{
+        title: 'Edit',
+        layout: 'layouts/main-layout',
+        book: bookData
+    })
+    // console.log(book)
+})
+
 router.use(crudRouter)
 
 

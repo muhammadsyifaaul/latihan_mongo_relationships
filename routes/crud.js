@@ -1,8 +1,12 @@
 const express = require('express')
 const router = express.Router()
+const app = express()
 const Book = require('../models/book')
 const Author = require('../models/author')
 const Publisher = require('../models/publisher')
+
+const methodOverride = require('method-override')
+
 
 router.post('/addBook', async (req,res) => {
     const {title, author, publisher} = req.body
@@ -33,6 +37,24 @@ router.post('/addBook', async (req,res) => {
     
     res.redirect('/home')
     
+})
+
+router.put('/edit/:id?_method=PUT',async (req,res) => {
+    try {
+        const {id} = req.params
+    // const {title, author, publisher} = req.body
+    // const findAuthor = await Author.findOne({name: {$regex: author,$option:'i'}})
+    // if(!findAuthor) {
+    //     const newAuthor = new Author({
+    //         name: author
+    //     })
+    //     await newAuthor.save()
+    // }
+    const book = await Book.findById(id)
+    console.log(book)
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 
