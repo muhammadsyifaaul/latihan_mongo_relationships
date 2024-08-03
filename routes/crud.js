@@ -5,16 +5,15 @@ const Book = require('../models/book')
 const Author = require('../models/author')
 const Publisher = require('../models/publisher')
 
-const methodOverride = require('method-override')
+const methodOverride = require('method-override');
 
+router.use(methodOverride('_method'));
 
 router.post('/addBook', async (req,res) => {
     const {title, author, publisher} = req.body
-    
     const authorBook = new Author({
         name: author
     })
-    
     const publisherBook = new Publisher({
         name: publisher
     })
@@ -23,7 +22,6 @@ router.post('/addBook', async (req,res) => {
         author: authorBook._id,
         publisher: publisherBook._id
     })
-
    await Promise.all([authorBook.save(),publisherBook.save(),book.save()])
 
 
@@ -39,23 +37,37 @@ router.post('/addBook', async (req,res) => {
     
 })
 
-router.put('/edit/:id?_method=PUT',async (req,res) => {
-    try {
-        const {id} = req.params
-    // const {title, author, publisher} = req.body
-    // const findAuthor = await Author.findOne({name: {$regex: author,$option:'i'}})
-    // if(!findAuthor) {
-    //     const newAuthor = new Author({
-    //         name: author
-    //     })
-    //     await newAuthor.save()
-    // }
-    const book = await Book.findById(id)
-    console.log(book)
-    } catch (error) {
-        console.log(error)
+router.put('/edit/:id?',async (req,res) => {
+    const {id} = req.params
+    const {title, author, publisher} = req.body
+    let findAuthor = await Author.findOne({ name: { $regex: author, $options: 'i' } });
+    let findPublisher = await Publisher.findOne({ name: { $regex: publisher, $options: 'i' } });
+    if(!findAuthor) {
+        findAuthor = new Author({
+            name: author,
+            books: []
+        })
     }
+    if(!findPublisher) {
+        findPublisher = new Publisher({
+            name: publisher,
+            books: []
+        })
+    }
+    const updatedBook = await Book.findByIdAndUpdate(id,{
+        title,
+        author: findAuthor._id,
+        publisher: findPublisher._id
+    })
+    if(!findAuthor.books.includes(updatedBook._id)) {
+        findAuthor.books.push(updatedBook._id)
+    }
+    if(!findPublisher.books.includes(updatedBook._id)) {
+        findPublisher.books.push(updatedBook._id)
+    }
+    await findAuthor.save()
+    await findPublisher.save()
+    res.redirect('/home')
 })
-
 
 module.exports = router
