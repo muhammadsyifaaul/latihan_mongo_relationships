@@ -70,4 +70,32 @@ router.put('/edit/:id?',async (req,res) => {
     res.redirect('/home')
 })
 
+router.delete('/delete/:id', async (req,res) => {
+    // const {id} = req.params
+    // Book.findByIdAndDelete(id)
+    // .then(res => console.log('data successfully deleted'))
+    // .catch(err => console.log(err))
+    // res.redirect('/home')
+
+    const {id} = req.params
+    const findBook = await Book.findById(id)
+    const findAuthor = await Author.findById(findBook.author._id)
+    const findPublisher = await Publisher.findById(findBook.publisher._id)
+
+    if (findAuthor) {
+        findAuthor.books.pull(findBook._id);
+        await findAuthor.save();
+      }
+  
+      if (findPublisher) {
+        findPublisher.books.pull(findBook._id);
+        await findPublisher.save();
+      }
+  
+      await Book.findByIdAndDelete(id);
+
+    res.redirect('/home')
+    // const findAuthor = await Author.findById(findBook.author)
+})
+
 module.exports = router
